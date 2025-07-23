@@ -5,7 +5,7 @@
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Project Overview](#-project-overview)
 - [Architecture](#-architecture)
@@ -20,7 +20,7 @@
 - [Lessons Learned](#-lessons-learned)
 - [Future Improvements](#-future-improvements)
 
-## 🎯 Project Overview
+## Project Overview
 
 This project demonstrates the deployment of a **two-tier Flask web application** on **Kubernetes** cluster running on **AWS EC2 instances**. The application consists of a Flask frontend/backend and a MySQL database, showcasing modern containerized application deployment practices.
 
@@ -36,14 +36,14 @@ This project demonstrates the deployment of a **two-tier Flask web application**
 
 ### Key Achievements
 
-✅ Successfully deployed a production-ready two-tier application  
-✅ Implemented persistent storage for database  
-✅ Set up service discovery between application tiers  
-✅ Configured external access via NodePort services  
-✅ Established monitoring and troubleshooting workflows  
-✅ Documented comprehensive deployment process
+Successfully deployed a production-ready two-tier application.
+Implemented persistent storage for database.  
+Set up service discovery between application tiers.  
+Configured external access via NodePort services.  
+Established monitoring and troubleshooting workflows.  
+Documented comprehensive deployment process.
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -94,17 +94,17 @@ This project demonstrates the deployment of a **two-tier Flask web application**
 
 <img width="1911" height="874" alt="Image" src="https://github.com/user-attachments/assets/190c06e6-9b6a-4723-adbf-50a85ec1900b" />
 
-<img width="1315" height="612" alt="Image" src="https://github.com/user-attachments/assets/90333f6e-641a-43b3-afc5-195afbac89b8" />
-
 ### Master node
 
-<img width="1323" height="692" alt="Image" src="https://github.com/user-attachments/assets/a1da4600-6926-41d3-95c7-639bb7be810d" />
+<img width="1315" height="612" alt="Image" src="https://github.com/user-attachments/assets/90333f6e-641a-43b3-afc5-195afbac89b8" />
 
 ### Worker node
 
+<img width="1323" height="692" alt="Image" src="https://github.com/user-attachments/assets/a1da4600-6926-41d3-95c7-639bb7be810d" />
+
 <img width="1902" height="878" alt="Image" src="https://github.com/user-attachments/assets/0e3a3ca1-24f7-454b-8a90-859a681b0f41" />
 
-## 📋 Prerequisites
+## Prerequisites
 
 ### System Requirements
 
@@ -133,7 +133,7 @@ This project demonstrates the deployment of a **two-tier Flask web application**
   - Custom TCP (2379-2380) - For etcd
   - Custom TCP (10250-10252) - For kubelet
 
-## 🚀 Infrastructure Setup
+## Infrastructure Setup
 
 ### Step 1: AWS EC2 Instance Creation
 
@@ -256,7 +256,7 @@ ip-172-31-27-130   Ready    control-plane   5m    v1.25.0
 ip-172-31-28-223   Ready    <none>          2m    v1.25.0
 ```
 
-## 🏗️ Application Components
+## Application Components
 
 ### Flask Application Structure
 
@@ -377,7 +377,7 @@ spec:
           value: "two_tier_db"
 ```
 
-## 🚀 Deployment Process
+## Deployment Process
 
 ### Step 1: Prepare Application Code
 
@@ -487,7 +487,7 @@ NAME                               READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/mysql-deployment   1/1     1            1           5m
 ```
 
-## 🚨 Challenges & Solutions
+## Challenges & Solutions
 
 ### Challenge 1: Pod Stuck in Pending State
 
@@ -663,7 +663,7 @@ spec:
 - Monitor node resource utilization
 - Scale cluster when needed
 
-## 🛠️ Troubleshooting Guide
+## Troubleshooting Guide
 
 ### Level 1: Quick Health Checks
 
@@ -759,7 +759,7 @@ sudo journalctl -u kubelet -f
 | `NodeNotReady`       | Node issues                      | Check kubelet, docker daemon       |
 | `ServiceUnavailable` | Service/endpoint issues          | Check selectors, pod labels        |
 
-## ✅ Testing & Validation
+## Testing & Validation
 
 ### Functional Testing
 
@@ -803,7 +803,7 @@ kubectl delete pod <mysql-pod>
 # Verify automatic restart and data persistence
 ```
 
-## 📊 Monitoring & Maintenance
+## Monitoring & Maintenance
 
 ### Daily Monitoring Tasks
 
@@ -846,7 +846,7 @@ kubectl get all --all-namespaces -o yaml > cluster-backup.yaml
 # For hostPath volumes, backup the node directory
 ```
 
-## 🎓 Lessons Learned
+## Lessons Learned
 
 ### Technical Insights
 
@@ -882,29 +882,14 @@ kubectl get all --all-namespaces -o yaml > cluster-backup.yaml
 
 4. **Version Management**: Use semantic versioning for applications and infrastructure.
 
-## 📚 Additional Resources
-
-### Documentation
-
-- [Kubernetes Official Documentation](https://kubernetes.io/docs/)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
-- [AWS EKS User Guide](https://docs.aws.amazon.com/eks/)
-
-### Tools & Utilities
-
-- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
-- [Helm Package Manager](https://helm.sh/)
-- [K9s - Kubernetes CLI](https://k9scli.io/)
-- [Lens - Kubernetes IDE](https://k8slens.dev/)
-
 ### Learning Resources
 
+- [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 - [Kubernetes the Hard Way](https://github.com/kelseyhightower/kubernetes-the-hard-way)
 - [Play with Kubernetes](https://labs.play-with-k8s.com/)
 - [Kubernetes Academy](https://kubernetes.academy/)
 
-## 🤝 Contributing
+## Contributing
 
 Feel free to contribute to this project by:
 
@@ -913,13 +898,13 @@ Feel free to contribute to this project by:
 - Submitting pull requests
 - Sharing your deployment experiences
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Project Status**: ✅ **Successfully Deployed and Running**
+**Project Status**: **Successfully Deployed and Running**
 
 **Last Updated**: July 23, 2025
 
