@@ -5,7 +5,7 @@
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 
-## Table of Contents
+## 📋 Table of Contents
 
 - [Quick Start Guide](#-quick-start-guide)
 - [Overview](#-overview)
@@ -18,7 +18,7 @@
 - [Lessons Learned](#-lessons-learned)
 - [Command Reference](#-command-reference)
 
-## Quick Start Guide
+## 🚀 Quick Start Guide
 
 **Want to deploy this application on your Kubernetes cluster? Follow these simple steps!**
 
@@ -168,7 +168,7 @@ kubectl exec -it deployment/mysql-chart -- mysql -u flaskuser -pflaskpass -D fla
 # +------+
 ```
 
-## ��� Troubleshooting Common Issues
+## 🔧 Troubleshooting Common Issues
 
 ### Issue 1: Pods Stuck in Pending
 
@@ -218,7 +218,7 @@ kubectl port-forward svc/flask-front-chart 8080:80
 # Then access: http://localhost:8080
 ```
 
-## Quick Commands Summary
+## 🎯 Quick Commands Summary
 
 ```bash
 # One-time setup
@@ -247,14 +247,14 @@ kubectl get all                         # Verify cleanup
 
 
 
-## Overview
+## 🎯 Overview
 
 This is issue i faced when i tried to deploy this application the complete troubleshooting process for deploying a two-tier Flask application using Helm charts on Kubernetes. The application consists of:
 
 **Duration**: ~2 hours of troubleshooting  
 **Final Status**: ✅ Successfully Deployed
 
-## Initial Problem
+## 🚨 Initial Problem
 
 ### Symptoms Observed
 
@@ -281,7 +281,7 @@ Warning  Unhealthy  4m28s  kubelet  Liveness probe failed: Get "http://192.168.1
 Warning  Unhealthy  4m28s  kubelet  Readiness probe failed: Get "http://192.168.144.162:3306/": malformed HTTP response "I\x00\x00\x00"
 ```
 
-## Environment Setup
+## 🛠️ Environment Setup
 
 ### Infrastructure Details
 
@@ -315,7 +315,7 @@ drwxr-xr-x 4 ubuntu ubuntu 4096 Jul 23 21:45 mysql-chart
 -rw-rw-r-- 1 ubuntu ubuntu 4309 Jul 23 20:39 mysql-chart-0.1.0.tgz
 ```
 
-## Troubleshooting Journey
+## 🔍 Troubleshooting Journey
 
 ### Step 1: Initial Assessment
 
@@ -336,7 +336,7 @@ flask-front-chart-95964856d-2vq5x   0/1     CrashLoopBackOff   15 (2m4s ago)   5
 mysql-chart-75975bdb6c-hzdl5        0/1     CrashLoopBackOff   15 (96s ago)    34m
 ```
 
-**Analysis**: Both applications are failing to start properly.
+**🔍 Analysis**: Both applications are failing to start properly.
 
 ### Step 2: Log Analysis
 
@@ -360,7 +360,7 @@ Traceback (most recent call last):
 MySQLdb.OperationalError: (2005, "Unknown server host 'msql-chart' (-2)")
 ```
 
-**Analysis**: Flask app can't resolve MySQL hostname. Initially suspected typo in hostname.
+**🔍 Analysis**: Flask app can't resolve MySQL hostname. Initially suspected typo in hostname.
 
 #### MySQL Application Logs
 
@@ -376,7 +376,7 @@ $ kubectl logs mysql-chart-75975bdb6c-hzdl5
 2025-07-23T22:18:49.831650Z 0 [System] [MY-015016] [Server] MySQL Server - end.
 ```
 
-**Analysis**: MySQL starts but then terminates unexpectedly.
+**🔍 Analysis**: MySQL starts but then terminates unexpectedly.
 
 ### Step 3: Configuration Analysis
 
@@ -390,7 +390,7 @@ kubernetes          ClusterIP   10.96.0.1        <none>        443/TCP        23
 mysql-chart         ClusterIP   10.108.93.170    <none>        3306/TCP       78s
 ```
 
-**Analysis**: Service names are correct. The issue is not hostname resolution.
+**🔍 Analysis**: Service names are correct. The issue is not hostname resolution.
 
 #### Check Flask Chart Configuration
 
@@ -416,7 +416,7 @@ env:
   mysqlpass: flaskpass     # ✅ Matches Flask config
 ```
 
-**Analysis**: Configuration looks correct. The problem must be elsewhere.
+**🔍 Analysis**: Configuration looks correct. The problem must be elsewhere.
 
 ### Step 4: Deep Dive - Pod Description
 
@@ -450,7 +450,7 @@ Events:
   Warning  Unhealthy  2m16s (x2 over 2m40s)  kubelet  Readiness probe failed: Get "http://192.168.144.163:5000/": dial tcp 192.168.144.163:5000: connect: connection refused
 ```
 
-## Root Cause Analysis
+## 🎯 Root Cause Analysis
 
 ### The Critical Discovery
 
@@ -460,7 +460,7 @@ The key breakthrough came when analyzing the MySQL pod events:
 Warning  Unhealthy  4m28s  kubelet  Liveness probe failed: Get "http://192.168.144.162:3306/": malformed HTTP response "I\x00\x00\x00"
 ```
 
-**ROOT CAUSE IDENTIFIED**:
+**🚨 ROOT CAUSE IDENTIFIED**:
 
 The MySQL Helm chart was configured with **HTTP health probes** trying to connect to port 3306, but **MySQL only supports TCP connections**. The Kubernetes liveness and readiness probes were continuously failing, causing the container to restart in an endless loop.
 
@@ -548,7 +548,7 @@ NAME                           READY   STATUS    RESTARTS   AGE
 mysql-chart-5b58cb87dc-jvx4z   1/1     Running   0          8s
 ```
 
-**SUCCESS**: MySQL pod is now `1/1 Running` with no restarts!
+**🎉 SUCCESS**: MySQL pod is now `1/1 Running` with no restarts!
 
 #### Check MySQL Logs
 
@@ -557,7 +557,7 @@ $ kubectl logs mysql-chart-5b58cb87dc-jvx4z --tail=10
 2025-07-23T22:31:28.898496Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.4.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
 ```
 
-**SUCCESS**: MySQL is stable and "ready for connections"!
+**🎉 SUCCESS**: MySQL is stable and "ready for connections"!
 
 ### Step 4: Test Database Connectivity
 
@@ -571,7 +571,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 +------+
 ```
 
-**SUCCESS**: Database authentication and connectivity working perfectly!
+**🎉 SUCCESS**: Database authentication and connectivity working perfectly!
 
 ### Step 5: Deploy Flask Application
 
@@ -592,7 +592,7 @@ NAME                                READY   STATUS    RESTARTS   AGE
 flask-front-chart-df4d8cc69-bbvpf   1/1     Running   0          7s
 ```
 
-**SUCCESS**: Flask pod is also `1/1 Running`!
+**🎉 SUCCESS**: Flask pod is also `1/1 Running`!
 
 ## ✅ Verification Steps
 
@@ -640,7 +640,7 @@ $ curl -I http://54.164.122.182:30007
 ```
 
 
-## Lessons Learned
+## 🎓 Lessons Learned
 
 ### Technical Lessons
 
@@ -680,7 +680,7 @@ $ curl -I http://54.164.122.182:30007
 3. **Template Review**: Don't trust generated templates blindly
 4. **Incremental Deployment**: Deploy one chart at a time for easier debugging
 
-## ��� Command Reference
+## 📚 Command Reference
 
 ### Diagnostic Commands Used
 
@@ -728,7 +728,7 @@ sed -i '/readinessProbe:/,/port: http/s/^/#/' mysql-chart/values.yaml
 grep -A 5 -B 2 "livenessProbe\|readinessProbe" mysql-chart/values.yaml
 ```
 
-## Success Metrics
+## 🚀 Success Metrics
 
 ### Before Fix
 
@@ -752,7 +752,7 @@ grep -A 5 -B 2 "livenessProbe\|readinessProbe" mysql-chart/values.yaml
 - **Fix Implementation**: ~30 minutes
 - **Verification**: ~5 minutes
 
-## Final Status
+## 🎯 Final Status
 
 ```bash
 # Final verification - All systems operational
@@ -775,9 +775,8 @@ mysql-chart       default    1         2025-07-23 22:31:16.361373849 +0000   dep
 
 ---
 
-**Troubleshooting completed successfully**  
-**Application Status**: FULLY OPERATIONAL  
+**Troubleshooting completed successfully on July 23, 2025**  
+**Application Status**: 🟢 FULLY OPERATIONAL  
 **Access URL**: `http://<worker-node-ip>:30007`
 
 _This guide serves as a complete reference for troubleshooting similar Helm deployment issues with multi-tier applications._
-
