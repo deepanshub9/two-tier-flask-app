@@ -11,8 +11,8 @@
 - [Architecture](#-architecture)
 - [Prerequisites](#-prerequisites)
 - [Infrastructure Setup](#-infrastructure-setup)
-- [Application Components](#-application-components)
 - [Deployment Process](#-deployment-process)
+- [Application](#-Application)
 - [Challenges & Solutions](#-challenges--solutions)
 - [Troubleshooting Guide](#%EF%B8%8F-troubleshooting-guide)
 - [Testing & Validation](#-testing--validation)
@@ -190,59 +190,9 @@ sudo systemctl enable docker
 docker --version
 ```
 
-### Step 4: Install Kubernetes (On Both Nodes)
+### Install Kubeadm via kubernetes fellow this README.md file. I mention in detialed how to setup Master and Worker node on AWS instances.
 
-```bash
-# Add Kubernetes GPG key
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
-
-# Add Kubernetes repository
-echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-# Install Kubernetes components
-sudo apt update
-sudo apt install -y kubelet kubeadm kubectl
-
-# Hold packages to prevent automatic updates
-sudo apt-mark hold kubelet kubeadm kubectl
-
-# Configure containerd
-sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml
-
-# Restart containerd
-sudo systemctl restart containerd
-sudo systemctl enable containerd
-
-# Disable swap (required for Kubernetes)
-sudo swapoff -a
-sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
-```
-
-### Step 5: Initialize Kubernetes Cluster (Master Node Only)
-
-```bash
-# Initialize the cluster
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16
-
-# Configure kubectl for regular user
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-# Install Calico network plugin
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-
-# Get join command for worker nodes
-kubeadm token create --print-join-command
-```
-
-### Step 6: Join Worker Node to Cluster
-
-```bash
-# On Worker Node, run the join command from master
-sudo kubeadm join <MASTER_IP>:6443 --token <TOKEN> --discovery-token-ca-cert-hash sha256:<HASH>
-```
+URL: <a href="https://github.com/deepanshub9/Kubernetes-starter" target="_blank">Kubeadm</a>
 
 ### Step 7: Verify Cluster Setup
 
@@ -278,103 +228,6 @@ two-tier-flask-app/
     ├── two-tier-app-deployment.yml
     ├── two-tier-app-pod.yml
     └── two-tier-app-svc.yml
-```
-
-### Flask Application Code
-
-```python
-# app.py - Main Application
-from flask import Flask, render_template, request, redirect, url_for
-import mysql.connector
-import os
-
-app = Flask(__name__)
-
-# Database configuration
-db_config = {
-    'host': os.getenv('MYSQL_HOST', 'mysql-service'),
-    'user': os.getenv('MYSQL_USER', 'root'),
-    'password': os.getenv('MYSQL_PASSWORD', 'rootpassword'),
-    'database': os.getenv('MYSQL_DATABASE', 'two_tier_db')
-}
-
-def get_db_connection():
-    try:
-        conn = mysql.connector.connect(**db_config)
-        return conn
-    except mysql.connector.Error as e:
-        print(f"Database connection error: {e}")
-        return None
-
-@app.route('/')
-def index():
-    conn = get_db_connection()
-    if conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users")
-        users = cursor.fetchall()
-        conn.close()
-        return render_template('index.html', users=users)
-    return "Database connection failed"
-
-@app.route('/add_user', methods=['POST'])
-def add_user():
-    name = request.form['name']
-    email = request.form['email']
-
-    conn = get_db_connection()
-    if conn:
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (name, email) VALUES (%s, %s)", (name, email))
-        conn.commit()
-        conn.close()
-
-    return redirect(url_for('index'))
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
-```
-
-### Dockerfile
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 5000
-
-CMD ["python", "app.py"]
-```
-
-```yaml
-# two-tier-app-pod.yml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: two-tier-app-pod
-  labels:
-    app: two-tier-app
-spec:
-  containers:
-    - name: two-tier-app
-      image: your-dockerhub-username/two-tier-flask-app:latest
-      ports:
-        - containerPort: 5000
-      env:
-        - name: MYSQL_HOST
-          value: "mysql-service"
-        - name: MYSQL_USER
-          value: "root"
-        - name: MYSQL_PASSWORD
-          value: "rootpassword"
-        - name: MYSQL_DATABASE
-          value: "two_tier_db"
 ```
 
 ## Deployment Process
