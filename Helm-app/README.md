@@ -168,7 +168,7 @@ kubectl exec -it deployment/mysql-chart -- mysql -u flaskuser -pflaskpass -D fla
 # +------+
 ```
 
-## ��� Troubleshooting Common Issues
+## Troubleshooting Common Issues
 
 ### Issue 1: Pods Stuck in Pending
 
@@ -481,7 +481,7 @@ The MySQL Helm chart was configured with **HTTP health probes** trying to connec
 # being interpreted as an invalid HTTP response
 ```
 
-## ✅ Solution Implementation
+## Solution Implementation
 
 ### Step 1: Uninstall Broken Deployments
 
@@ -594,7 +594,7 @@ flask-front-chart-df4d8cc69-bbvpf   1/1     Running   0          7s
 
 **SUCCESS**: Flask pod is also `1/1 Running`!
 
-## ✅ Verification Steps
+## Verification Steps
 
 ### Check All Resources
 
@@ -680,7 +680,7 @@ $ curl -I http://54.164.122.182:30007
 3. **Template Review**: Don't trust generated templates blindly
 4. **Incremental Deployment**: Deploy one chart at a time for easier debugging
 
-## ��� Command Reference
+## Command Reference
 
 ### Diagnostic Commands Used
 
