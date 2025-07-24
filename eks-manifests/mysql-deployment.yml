@@ -24,11 +24,11 @@ spec:
                   name: mysql-secret
                   key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_DATABASE
-              value: "mydb"
+              value: "flaskdb"
             - name: MYSQL_USER
-              value: "admin"
+              value: "flaskuser"
             - name: MYSQL_PASSWORD
-              value: "admin"
+              value: "flaskpass"
           ports:
             - containerPort: 3306
           volumeMounts:
@@ -37,4 +37,4 @@ spec:
       volumes:
         - name: mysql-initdb
           configMap:
-            name: mysql-initdb-config    # Config name
+            name: mysql-initdb-config # Config name
