@@ -74,6 +74,10 @@ This project demonstrates the deployment of a **two-tier Flask web application**
                     └──────────────────┘
 ```
 
+<img width="1908" height="939" alt="Image" src="https://github.com/user-attachments/assets/e9d10248-8f43-4670-b26a-de30c8876abd" />
+
+<img width="1908" height="875" alt="Image" src="https://github.com/user-attachments/assets/3152f2e6-b333-4a8d-b8fa-ce69873fe3b5" />
+
 ## 📋 Prerequisites
 
 ### AWS Account Requirements
